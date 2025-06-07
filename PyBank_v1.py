@@ -26,84 +26,30 @@ def input_opcoes(prompt: str) -> str:
     while True:
         try:
             entrada = input(prompt).strip().upper()
-            if not entrada.isalpha():
+            if entrada.isdigit():
+                limpar_terminal()
+                print("Operação falhou! Informe uma opção válida.")
+            else:
                 return entrada
         except ValueError:
             print("Operação falhou! Informe uma opção válida.")    
 
-class Sistema_banco:
-    def __init__(self):
-        pass
-
-    def menu_login(self) -> str:
-        self.opcao = input_opcoes("""
-_____________________________________  
-
-    Selecione a operação desejada:
-_____________________________________
-
-[A] Abrir Conta     [L] Login
-________________    _________________
-
- """)
-        while True:
-            if self.opcao in ["A", "L"]:
-                return str(self.opcao)
-            else:
-                print("Operação falhou! Informe uma opção válida.")
-
-    def menu_principal(self) -> str:
-        self.opcao = input_opcoes("""
-___________________________________
-   
-    Selecione a opção desejada:
-___________________________________
-
-[D] Depositar       [E] Extrato
-_______________     _______________
-
-[S] Sacar           [Q] Sair
-_______________     _______________
-
- """)
-        while True:
-            if self.opcao in ["D", "E", "S", "Q"]:
-                return str(self.opcao)
-            else:
-                print("Operação falhou! Informe uma opção válida.")
-
-    def logar_conta(self, conta, agencia, senha) -> int:
-        self.nemero_conta = conta
-        self.numero_agencia = agencia
-        self.senha = senha
-        self.conta_logada = self.nemero_conta
-        return self.conta_logada
-
-class Banco:
-    def __init__(self):
-        self.contas = []
-    
-    def criar_conta(self, nome: str, senha: str, saldo_inicial: float = 0.0, limite_inicial: float = 500.0) -> Conta:
-        nova_conta = Conta(nome=nome, saldo=saldo_inicial, limite=limite_inicial, senha=senha)
-        self.contas.append(nova_conta)
-        return nova_conta
-    
-    def exibir_contas(self) -> None:
-        for conta in self.contas:
-            print(f"Nome: {Conta.nome}, Saldo: {formatar_float(Conta.saldo)}, Limite: {formatar_float(Conta.limite)}")
-
 class Conta:
     def __init__(self, nome: str, saldo: float, senha: str, limite: float = 500) -> None:
-        self.numero_conta = 1 
+        self.numero_conta = len(banco.contas) + 1
         self.agencia = 1
         self.nome = nome
         self.senha = senha
         self.saldo = saldo
         self.limite = limite
-        self.extrato: list[str] = []
+        self.extrato = []
         self.limite_saques_dia = 10
         self.numero_saques_hoje = 0
         self.data_utimo_saque: Optional[date] = None
+
+    def __str__(self) -> str:
+        return f"Conta nº {self.numero_conta} | Agência: {self.agencia} | Titular: {self.nome} | Saldo: R$ {formatar_float(self.saldo)} | Limite: R$ {formatar_float(self.limite)}"
+
 
     def depositar(self, valor: float) -> None:
         if valor > 0:
@@ -150,7 +96,96 @@ class Conta:
             print (f"O seu limite atual é de: R$ {formatar_float(self.limite)}")
             print (47 * "=")
 
-           
+class Banco:
+    def __init__(self):
+        self.contas = []
+    
+    def criar_conta(self, nome: str, senha: str, saldo_inicial: float = 0.0, limite_inicial: float = 500.0) -> Conta:
+        nova_conta = Conta(nome=nome, saldo=saldo_inicial, limite=limite_inicial, senha=senha)
+        self.contas.append(nova_conta)
+        return nova_conta
+    
+    def exibir_contas(self) -> None:
+        for conta in self.contas:
+            print(f"Nome: {conta.nome}, Saldo: {formatar_float(conta.saldo)}, Limite: {formatar_float(conta.limite)}")
+
+class Sistema_banco:
+    def __init__(self):
+        self.conta_logada = None
+        pass
+
+    def menu_login(self) -> str:
+        self.opcao = input_opcoes("""
+_____________________________________  
+
+    Selecione a operação desejada:
+_____________________________________
+
+[A] Abrir Conta     [L] Login
+________________    _________________
+
+ """)
+        while self.opcao not in ["A", "L"]:
+            print("Operação falhou! Informe uma opção válida.")
+            self.opcao = input_opcoes("""
+_____________________________________  
+
+    Selecione a operação desejada:
+_____________________________________
+
+[A] Abrir Conta     [L] Login
+________________    _________________
+""")   
+        return self.opcao
+
+    def menu_principal(self) -> str:
+        self.opcao = input_opcoes("""
+___________________________________
+   
+    Selecione a opção desejada:
+___________________________________
+
+[D] Depositar       [E] Extrato
+_______________     _______________
+
+[S] Sacar           [Q] Sair
+_______________     _______________
+
+ """)
+        self.opcao = self.opcao.upper()
+        while True:
+            if self.opcao in ["D", "E", "S", "Q"]:
+                return str(self.opcao)
+            else:
+                print("Operação falhou! Informe uma opção válida.")
+
+    def logar_conta(self, numero_conta, agencia, senha):
+        for conta in banco.contas:
+            if conta.numero_conta == numero_conta and agencia == conta.agencia and senha == conta.senha:
+                self.conta_logada = conta
+                print(f"Bem vindo, {conta.nome}!")
+                return conta
+        print ("Falnha no login. Conta ou senha invalidos!")
+        return None
 
 if __name__ == "__main__":
-    
+    banco = Banco()
+    sistema_banco = Sistema_banco()
+
+
+    while True:
+        opcao = sistema_banco.menu_login()
+        if opcao == "A":
+            nome = input("Digite o seu primeiro nome: \n")
+            senha = input("Crie uma senha: \n")
+            nova_conta = banco.criar_conta(nome, senha)
+            print (f"Parabéns, {nome}! \nContra criada com sucesso!")
+            print (f"Conta: {nova_conta}")
+
+        elif opcao == "L":
+            numero_conta = int(input("Digite o número da conta: \n"))
+            agencia = int(input("Digite a agência: \n"))
+            senha = (input("Digite sua senha: \n"))
+            conta_logada = sistema_banco.logar_conta(numero_conta=numero_conta, agencia=agencia, senha=senha)
+            if conta_logada:
+                sistema_banco.menu_principal()
