@@ -28,15 +28,15 @@ Este projeto reúne os primeiros exercícios de lógica que estou estudando, com
 ---
 
 ## Principais aprendizados até aqui
-- **Importar**
-- Declarar **classes**
-- Como declarar **variáveis** em **Python**.
-- A diferença entre **if, elif e else**.
-- Criar e chamar **funções**.
-- Loops (**while, for**)
-- Lidar com erros usando **Try** e **except**
-- Usar **input( )** e trabalhar com tipos de dados.
-- **POO** (Programação Orientada a Objetos)
+- Importar bibliotecas e módulos com `import` e `from ... import ...`
+- Declarar `classes`
+- Como declarar `variáveis` em `Python*`.
+- A diferença entre `if, elif e else`.
+- Criar e chamar `funções`.
+- Loops (`while, for`)
+- Lidar com erros usando `Try` e `except`
+- Usar `input( )` e trabalhar com tipos de dados.
+- `POO` (Programação Orientada a Objetos)
 
 ---
 
@@ -45,6 +45,14 @@ Este projeto reúne os primeiros exercícios de lógica que estou estudando, com
 - Git e GitHub
 - Terminal
 - ChatGPT (Tirar dúvidas)
+
+---
+
+## Próximos Passos
+- Refatorar a estrutura do projeto, separando as classes em arquivos distintos para melhorar a organização e a legibilidade do código;
+- Implementar o fluxo de trabalho baseado em **GitFlow**, aplicando o que venho estudando sobre versionamento e gerenciamento de branches;
+- Desenvolver a lógica das funcionalidades principais da classe `Conta` no arquivo `main.py`, simulando operações bancárias diretamente no terminal.e main
+
 ---
 
 _Esse é o primeiro passo de muitos! Toda sugestão ou dica é bem-vinda. Vamos evoluir juntos🚀_
